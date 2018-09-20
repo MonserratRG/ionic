@@ -20,6 +20,7 @@
 
     <ion-content padding>
       <ion-action-sheet-controller></ion-action-sheet-controller>
+      <ion-alert-controller></ion-alert-controller>
 
       <ion-button expand="block" id="basic" onclick="presentBasic()">Basic</ion-button>
       <ion-button expand="block" id="noBackdropDismiss" onclick="presentNoBackdropDismiss()">No Backdrop Dismiss</ion-button>
@@ -169,8 +170,22 @@
       const actionSheetElement = await actionSheetController.create({
         buttons: [{
           text: 'Open Alert',
-          handler: () => {
-            console.log('Open Alert clicked');
+          handler: async () => {
+            const alertController = document.querySelector('ion-alert-controller');
+            await alertController.componentOnReady();
+            const alert = await alertController.create({
+                header: 'Alert from Action Sheet',
+                subHeader: 'Subtitle',
+                message: 'This is an alert message.',
+                buttons: [{
+                  text: 'Okay',
+                  handler: async () => {
+                    await actionSheetElement.dismiss();
+                  }
+                }]
+              });
+            await alert.present();
+            return false;
           }
         }, {
           text: 'Cancel',
